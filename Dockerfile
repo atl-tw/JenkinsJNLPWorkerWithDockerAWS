@@ -8,7 +8,7 @@ USER root
 ARG VERSION=3.26
 ARG AGENT_WORKDIR=/root/agent
 RUN apt-get update
-RUN apt-get install -y curl bash git openssh-client openssl procps
+RUN apt-get install -y curl bash git openssh-client openssl procps unzip
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar 
@@ -16,6 +16,8 @@ RUN curl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/lin
 RUN curl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/kubectl > /usr/local/bin/kubectl && chmod a+x /usr/local/bin/kubectl
 ENV AGENT_WORKDIR=${AGENT_WORKDIR}
 RUN mkdir /root/.jenkins && mkdir -p ${AGENT_WORKDIR}
+RUN curl https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip > terraform.zip \
+  && unzip terraform.zip && mv terraform /usr/local/bin
 
 VOLUME /root/.jenkins
 VOLUME ${AGENT_WORKDIR}
